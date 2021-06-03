@@ -15,7 +15,7 @@ http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_f
 [BMP Suite Image List](http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html)
 
 __*Example of how this program works:*__\
-Original:\
+Original (257 KB):\
 ![Origin](https://i.imgur.com/BQNXv8T.png)\
-Result (without dithering):\
+Result (32 KB, without dithering):\
 ![Result](https://i.imgur.com/CNEQaTm.png)
