@@ -11,7 +11,7 @@ Due to the fact that in 1-bit color BMP file there is only one 1 bit for a pixel
 __*Reference resources:*__\
 BMP file format:\
 https://en.wikipedia.org/wiki/BMP_file_format
-http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm
+http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm \
 [BMP Suite Image List](http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html)
 
 __*Example of how this program works:*__\
