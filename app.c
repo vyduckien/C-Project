@@ -17,11 +17,11 @@
 #include "bmp.h"
 
 void GreyScale(DWORD height, DWORD width, RGBTRIPLE img[height][width]);
-void BinaryConvert(DWORD height, DWORD width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][16]);
+void BinaryConvert(DWORD height, DWORD width, DWORD new_width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][new_width]);
 int main()
 {
     FILE* fp, *cp;
-    fp = fopen("Resources/barbara.bmp", "rb");         //bmp is binary file, therefore use "rb" permission
+    fp = fopen("Resources/lena.bmp", "rb");         //bmp is binary file, therefore use "rb" permission
     cp = fopen("Resources/output.bmp", "wb");
 
     BITMAP_HEADER fHeader;
@@ -46,16 +46,18 @@ int main()
 
     printf("Height: %d\n", fInfo.Height);
     printf("Width: %d\n", fInfo.Width);
-    int width = fInfo.Width;
-    int height = fInfo.Height;
-    int padding = (4 - (width * sizeof(RGBTRIPLE)) % 4) % 4;
-    int new_width;
+    DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;
+    DWORD height = fInfo.Height;
+    DWORD padding = (4 - (width * sizeof(RGBTRIPLE)) % 4) % 4;
+    DWORD new_width = width/8;
+    printf("New Width: %d\n", new_width);
+
 
     //read pixel data
     fseek(fp, fHeader.fOffset, SEEK_SET);
     printf("before reading pixel data: %lu\n", ftell(fp));
     RGBTRIPLE (*image)[width] = (RGBTRIPLE *)malloc(height * sizeof(*image));
-    RGBTRIPLE (*image_new)[width/8] = (RGBTRIPLE *)calloc(height, sizeof(*image));
+    RGBTRIPLE (*image_new)[new_width] = (RGBTRIPLE *)calloc(height, sizeof(*image));
 
     for (int i = 0; i < height; i++)
     {
@@ -66,14 +68,14 @@ int main()
     
     for(int i = 0; i < width; i++)
     {
-        printf("%X ", image[0][i].rgbtBlue);
+        printf("%X ", image[1][i].rgbtBlue);
         count++;
     }
     printf("\nNumber of elements: %d\n", count);
 
-    BinaryConvert(height, width, image, image_new);
+    BinaryConvert(height, width, new_width, image, image_new);
 
-    int widthStep = fInfo.Width / 8;
+    int widthStep = width/8;
 
     BYTE colorTable[8] = {0, 0, 0, 0, 255, 255, 255, 0};
     // BYTE colorTable[8] = {255,255,255,0,0,0,0,0};          //Endianness of BMP files is Little-Endian,
@@ -100,7 +102,7 @@ int main()
     printf("cp before writing: %lu\n", ftell(cp));
     for (int i = 0; i < height; i++)
     {
-        fwrite(image_new[i], sizeof(RGBTRIPLE), width/8, cp);
+        fwrite(image_new[i], sizeof(RGBTRIPLE), new_width, cp);
         for (int k = 0; k < padding; k++)
         {
             fputc(0x00, cp);
@@ -111,15 +113,15 @@ int main()
     printf("Pixel array after conversion: \n");
     for (int i = 0; i < width; i++)
     {
-        printf("%X ", image[0][i].rgbtBlue);
+        printf("%X ", image[1][i].rgbtBlue);
         count++;
     }
     printf("\nNumber of elements: %d\n", count);
 
     count = 0;
-    for (int i = 0; i < width/8; i++)
+    for (int i = 0; i < new_width; i++)
     {
-        printf("%X ", image_new[0][i].rgbtBlue);
+        printf("%X ", image_new[1][i].rgbtBlue);
         count++;
     }
     printf("\nNew array: %d\n", count);
@@ -128,7 +130,7 @@ int main()
     fclose(fp);   
 }
 
-void BinaryConvert(DWORD height, DWORD width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][width/8])
+void BinaryConvert(DWORD height, DWORD width, DWORD new_width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][new_width])
 {
     for (int i = 0; i < height; i++)
     {
@@ -147,13 +149,13 @@ void BinaryConvert(DWORD height, DWORD width, RGBTRIPLE img[height][width], RGBT
         int count = 0;
         int shift = 7;
         int j = 0;
-        for (j = 0; j < width/8; j++)
+        for (j = 0; j < new_width; j++)
         {
             for (k = count; k < count + 8; k++)
             {   
                 image_new[i][j].rgbtBlue += img[i][k].rgbtBlue << (shift - k);
                 count = k;
-                if (count % 512 == shift)
+                if (count % width == shift)
                 {
                     count++;
                     shift = shift + 8;
