@@ -40,4 +40,6 @@ typedef struct
     // BYTE rgbtRed;
 } RGBTRIPLE;
 
+void BinaryConvert(DWORD height, DWORD width, DWORD new_width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][new_width]);
+
 #endif
