@@ -2,7 +2,7 @@
 
 This is the program that converts an greyscale BMP file of 8-bit color depth to a binary bmp file.
 
-This program does not simply change the color of the original image, but *also modifies the header information*.
+This program does not simply change the color of the original image, but **also modifies the header information**.
 
 The resultant image has the relevant value, as well as reduced size due to compression.
 
