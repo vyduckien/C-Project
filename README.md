@@ -16,4 +16,4 @@ http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_f
 
 *__Example of how this program works:*__\
 Original: 
-![alt text](https://imgur.com/a/zUkpoGs "Original")
+![Testin](https://i.imgur.com/BQNXv8T.png)
