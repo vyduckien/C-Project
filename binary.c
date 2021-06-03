@@ -13,6 +13,7 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[he
         }
     }
     
+    //squeeze 8 bytes of 0 and 1 into one byte using bit shifting
     for (int i = 0; i < height; i++)
     {
         int k = 0;

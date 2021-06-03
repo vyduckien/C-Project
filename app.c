@@ -1,9 +1,9 @@
 /**
- * 5. Write a program to convert the image file .BMP of 256 grey levels 
+ * Write a program to convert the image file .BMP of 256 grey levels 
  * to binary image .BMP for the data section in the image file with the rule:
- *                     gray levels            binary      
- *                      0 – 127                    0
- *                      128 – 255                  1
+ *                      gray levels           binary      
+ *                        0 – 127               0
+ *                      128 – 255               1
  * 
  * Author: Vy Duc Kien
  * ID: 1951010
@@ -18,112 +18,73 @@
 
 int main()
 {
-    FILE* fp, *cp;
-    fp = fopen("Resources/test.bmp", "rb");         //bmp is binary file, therefore use "rb" permission
-    cp = fopen("Resources/output.bmp", "wb");
+    FILE *src, *dst;
+    src = fopen("Resources/lena.bmp", "rb");         //bmp is binary file, therefore use "rb" permission
+    dst = fopen("Resources/output.bmp", "wb");
 
     BITMAP_HEADER fHeader;
     INFO_HEADER   fInfo;
 
-    //make an exact copy of target .bmp file
-    // fseek(fp, 0, SEEK_SET);
-    // char b;
-    // for (int i = 0; i < fHeader.fSize; i++)
-    // {
-    //     fread(&b, 1, 1, fp);
-    //     fwrite(&b, 1, 1, cp);
-    // }
-    // printf("Width: %d\n", fInfo.Width);
-    // printf("Height: %d\n", fInfo.Height);
-    // printf("fp after copying files: %ld\n", ftell(fp));
-    
     //read file headers
-    fseek(fp, 0, SEEK_SET);
-    fread(&fHeader, sizeof(BITMAP_HEADER), 1, fp);
-    fread(&fInfo, sizeof(INFO_HEADER), 1, fp);
+    fseek(src, 0, SEEK_SET);
+    fread(&fHeader, sizeof(BITMAP_HEADER), 1, src);
+    fread(&fInfo, sizeof(INFO_HEADER), 1, src);
 
-    DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;
+    DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;  //width must be an even value
     DWORD height = fInfo.Height;
     DWORD padding = (4 - (width * sizeof(GRAY_VALUE)) % 4) % 4;
     DWORD new_width = width/8;
-    printf("Height: %d\n", height);
-    printf("Width: %d\n", width);
-    printf("New Width: %d\n", new_width);
-
+    // printf("Height: %d\n", height);
+    // printf("Width: %d\n", width);
+    // printf("New Width: %d\n", new_width);
 
     //read pixel data
-    fseek(fp, fHeader.fOffset, SEEK_SET);
-    printf("before reading pixel data: %lu\n", ftell(fp));
+    fseek(src, fHeader.fOffset, SEEK_SET);
     GRAY_VALUE (*image)[width] = (GRAY_VALUE *)malloc(height * sizeof(*image));
     GRAY_VALUE (*image_new)[new_width] = (GRAY_VALUE *)calloc(height, sizeof(*image));    //allocate memory and initialize all with 0
 
     for (int i = 0; i < height; i++)
     {
-        fread(image[i], sizeof(GRAY_VALUE), width, fp);
-        fseek(fp, padding,  SEEK_CUR);      //skip over padding
+        fread(image[i], sizeof(GRAY_VALUE), width, src);
+        fseek(src, padding,  SEEK_CUR);                     //skip over padding
     }
-    int count = 0;
-    
-    for(int i = 0; i < width; i++)
-    {
-        printf("%X ", image[0][i].Val);
-        count++;
-    }
-    printf("\nNumber of elements: %d\n", count);
 
+    //Convert to binary
     BinaryConvert(height, width, new_width, image, image_new);
 
-    int widthStep = width/8;
-
     BYTE colorTable[8] = {0, 0, 0, 0, 255, 255, 255, 0};
-    // BYTE colorTable[8] = {255,255,255,0,0,0,0,0};          //Endianness of BMP files is Little-Endian,
-                                                                //thus the inverse arrangement
-    // write file header
+    //BYTE colorTable[8] = {255,255,255,0,0,0,0,0};          //Endianness of BMP files is Little-Endian,
+                                                             //thus the inverse arrangement
+    //Modify header information
     fHeader.Signature = 0x4D42;
     fHeader.fOffset = 62;
-    fHeader.fSize = widthStep * fInfo.Height + 62;
+    fHeader.fSize = new_width * fInfo.Height + 62;
     fInfo.BitsPerPixel = 1;
-    fInfo.imgSize = widthStep * fInfo.Height;
+    fInfo.imgSize = new_width * fInfo.Height;
     fInfo.Color = 2;
 
-    fseek(cp, 0, SEEK_SET);
-    printf("cp after seek: %lu", ftell(cp));
-    fwrite(&fHeader, sizeof(BITMAP_HEADER), 1, cp);
-    fwrite(&fInfo, sizeof(INFO_HEADER), 1, cp);
-
-    // printf("\ncp after reading bHeader: %lu\n", ftell(cp));
-    fwrite(colorTable, sizeof(BYTE), 8, cp);
-    // printf("cp after writing color palette: %lu\n", ftell(cp));
+    //Write file header
+    fseek(dst, 0, SEEK_SET);
+    // printf("dst after seek: %lu", ftell(dst));
+    fwrite(&fHeader, sizeof(BITMAP_HEADER), 1, dst);
+    fwrite(&fInfo, sizeof(INFO_HEADER), 1, dst);
+    // printf("\ncp after reading bHeader: %lu\n", ftell(dst));
+    fwrite(colorTable, sizeof(BYTE), 8, dst);
+    // printf("dst after writing color palette: %lu\n", ftell(dst));
 
     //write pixel data to output
-    fseek(cp, fHeader.fOffset, SEEK_SET);
-    printf("cp before writing: %lu\n", ftell(cp));
+    fseek(dst, fHeader.fOffset, SEEK_SET);
+    printf("dst before writing: %lu\n", ftell(dst));
     for (int i = 0; i < height; i++)
     {
-        fwrite(image_new[i], sizeof(GRAY_VALUE), new_width, cp);
+        fwrite(image_new[i], sizeof(GRAY_VALUE), new_width, dst);
         for (int k = 0; k < padding; k++)
         {
-            fputc(0x00, cp);
+            fputc(0x00, dst);
         }
     }
 
-    count = 0;
-    printf("Pixel array after conversion: \n");
-    for (int i = 0; i < width; i++)
-    {
-        printf("%X ", image[0][i].Val);
-        count++;
-    }
-    printf("\nNumber of elements: %d\n", count);
-
-    count = 0;
-    for (int i = 0; i < new_width; i++)
-    {
-        printf("%X ", image_new[0][i].Val);
-        count++;
-    }
-    printf("\nNew array: %d\n", count);
-
-    fclose(cp);
-    fclose(fp);   
+    //Complete and close all files
+    fclose(dst);
+    fclose(src);   
 }

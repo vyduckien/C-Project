@@ -1,12 +1,19 @@
+CC=gcc
+CCFLAGS= -g -std=c99 -Wall -pedantic
 
-output: app.o
-	gcc app.o -o app
+# % matches all
+# %< is the source file (.c file)
 
-app.o: app.c bmp.h
-	gcc -c -Wall -pedantic -g app.c binary.c
+%.o: %.c
+	$(CC) -c $(CCFLAGS) $<
+
+app: app.o binary.o 
+	$(CC) -o app app.o binary.o 
+
 # test: test.o
 # 	gcc test.o -o  test
 # test.o: test.c bmp.h
 # 	gcc -c -Wall -pedantic -g test.c
+
 clean: 
 	del *.o	output
