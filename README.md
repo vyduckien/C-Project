@@ -10,10 +10,12 @@ Due to the fact that in 1-bit color BMP file there is only one 1 bit for a pixel
 
 __*Reference resources:*__
 
-BMP file format: \
+BMP file format:\
 https://en.wikipedia.org/wiki/BMP_file_format
 http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm
 
 __*Example of how this program works:*__\
 Original:\
 ![Origin](https://i.imgur.com/BQNXv8T.png)
+Result (without dithering):
+![Result](https://i.imgur.com/CNEQaTm.png)
