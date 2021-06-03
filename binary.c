@@ -1,15 +1,15 @@
 #include "bmp.h"
 
-void BinaryConvert(DWORD height, DWORD width, DWORD new_width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][new_width])
+void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[height][width], GRAY_VALUE image_new[height][new_width])
 {
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            if (img[i][j].rgbtBlue <= 127 && img[i][j].rgbtBlue >= 0)
-                img[i][j].rgbtBlue = 0;
-            else if (img[i][j].rgbtBlue <= 255 && img[i][j].rgbtBlue >= 128)
-                img[i][j].rgbtBlue = 0x1;
+            if (img[i][j].Val <= 127 && img[i][j].Val >= 0)
+                img[i][j].Val = 0;
+            else if (img[i][j].Val <= 255 && img[i][j].Val >= 128)
+                img[i][j].Val = 0x1;
         }
     }
     
@@ -23,7 +23,7 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, RGBTRIPLE img[hei
         {
             for (k = count; k < count + 8; k++)
             {   
-                image_new[i][j].rgbtBlue += img[i][k].rgbtBlue << (shift - k);
+                image_new[i][j].Val += img[i][k].Val << (shift - k);
                 count = k;
                 if (count % width == shift)
                 {

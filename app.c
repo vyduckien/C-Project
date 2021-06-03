@@ -44,7 +44,7 @@ int main()
 
     DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;
     DWORD height = fInfo.Height;
-    DWORD padding = (4 - (width * sizeof(RGBTRIPLE)) % 4) % 4;
+    DWORD padding = (4 - (width * sizeof(GRAY_VALUE)) % 4) % 4;
     DWORD new_width = width/8;
     printf("Height: %d\n", height);
     printf("Width: %d\n", width);
@@ -54,19 +54,19 @@ int main()
     //read pixel data
     fseek(fp, fHeader.fOffset, SEEK_SET);
     printf("before reading pixel data: %lu\n", ftell(fp));
-    RGBTRIPLE (*image)[width] = (RGBTRIPLE *)malloc(height * sizeof(*image));
-    RGBTRIPLE (*image_new)[new_width] = (RGBTRIPLE *)calloc(height, sizeof(*image));    //allocate memory and initialize all with 0
+    GRAY_VALUE (*image)[width] = (GRAY_VALUE *)malloc(height * sizeof(*image));
+    GRAY_VALUE (*image_new)[new_width] = (GRAY_VALUE *)calloc(height, sizeof(*image));    //allocate memory and initialize all with 0
 
     for (int i = 0; i < height; i++)
     {
-        fread(image[i], sizeof(RGBTRIPLE), width, fp);
+        fread(image[i], sizeof(GRAY_VALUE), width, fp);
         fseek(fp, padding,  SEEK_CUR);      //skip over padding
     }
     int count = 0;
     
     for(int i = 0; i < width; i++)
     {
-        printf("%X ", image[0][i].rgbtBlue);
+        printf("%X ", image[0][i].Val);
         count++;
     }
     printf("\nNumber of elements: %d\n", count);
@@ -100,7 +100,7 @@ int main()
     printf("cp before writing: %lu\n", ftell(cp));
     for (int i = 0; i < height; i++)
     {
-        fwrite(image_new[i], sizeof(RGBTRIPLE), new_width, cp);
+        fwrite(image_new[i], sizeof(GRAY_VALUE), new_width, cp);
         for (int k = 0; k < padding; k++)
         {
             fputc(0x00, cp);
@@ -111,7 +111,7 @@ int main()
     printf("Pixel array after conversion: \n");
     for (int i = 0; i < width; i++)
     {
-        printf("%X ", image[0][i].rgbtBlue);
+        printf("%X ", image[0][i].Val);
         count++;
     }
     printf("\nNumber of elements: %d\n", count);
@@ -119,7 +119,7 @@ int main()
     count = 0;
     for (int i = 0; i < new_width; i++)
     {
-        printf("%X ", image_new[0][i].rgbtBlue);
+        printf("%X ", image_new[0][i].Val);
         count++;
     }
     printf("\nNew array: %d\n", count);

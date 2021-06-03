@@ -2,7 +2,7 @@
 #define ____bmp_____
 
 #include <stdint.h>
-#pragma pack(1)
+#pragma pack(1)         //avoid padding between struct members
 
 typedef uint8_t  BYTE;
 typedef uint32_t DWORD;
@@ -35,11 +35,9 @@ typedef struct
 
 typedef struct
 {
-    BYTE rgbtBlue;
-    // BYTE rgbtGreen;
-    // BYTE rgbtRed;
-} RGBTRIPLE;
+    BYTE Val;
+} GRAY_VALUE;
 
-void BinaryConvert(DWORD height, DWORD width, DWORD new_width, RGBTRIPLE img[height][width], RGBTRIPLE image_new[height][new_width]);
+void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[height][width], GRAY_VALUE image_new[height][new_width]);
 
 #endif
