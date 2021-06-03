@@ -41,11 +41,28 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[he
     }
 }
 
-void FileCheck(BITMAP_HEADER fHeader, INFO_HEADER fInfo)
-{
-    if (fHeader.Signature != 0x4D42 || fInfo.BitsPerPixel != 8) 
+void WelcomeMsg()
     {
-        printf("\nInvalid file.");
-        exit(EXIT_FAILURE);
+        printf("=========================================================\n");
+        printf("\t\tWELCOME TO THE C PROJECT.\n");
+        printf("=========================================================");
+        printf("\n0 - Begin the program.");
+        printf("\n1 - Exit the program");
+        printf("\n2 - Further information.");
     }
+void ReadFile(FILE** src, BITMAP_HEADER *fInfo, INFO_HEADER *fHeader)
+{
+    fseek(*src, 0, SEEK_SET);
+    fread(fInfo, sizeof(BITMAP_HEADER), 1, *src);
+    fread(fHeader, sizeof(INFO_HEADER), 1, *src);
+}
+
+void NewHeader(BITMAP_HEADER *fHeader, INFO_HEADER *fInfo, DWORD new_width)
+{
+    (*fHeader).Signature = 0x4D42;
+    (*fHeader).fOffset = 62;
+    (*fHeader).fSize = new_width * (*fInfo).Height + 62;
+    (*fInfo).BitsPerPixel = 1;
+    (*fInfo).imgSize = new_width * (*fInfo).Height;
+    (*fInfo).Color = 2;
 }

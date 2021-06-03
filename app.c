@@ -22,38 +22,45 @@
 int main()
 {   FILE *src, *dst;
     char name[100];
-    printf("Enter image directory: ");
+    WelcomeMsg();
+
+OPEN_FILE:
+    printf("\nEnter path to image: ");
     fgets(name, 100, stdin);
     name[strcspn(name, "\n")] = 0;       // remove newline from string
-    
     src = fopen(name, "rb");            //bmp is binary file, therefore use "rb" permission
     dst = fopen("Resources/output.bmp", "wb");
 
     //check for valid file location
-    while (src == NULL)
+    if (src == NULL)
         {
-            printf("\nFile not found.");
-            return 1;
+            printf("File not found. Please enter a different path.");
+            goto OPEN_FILE;
         }
 
     BITMAP_HEADER fHeader;
     INFO_HEADER   fInfo;
         
     //read header information
-    fseek(src, 0, SEEK_SET);
-    fread(&fHeader, sizeof(BITMAP_HEADER), 1, src);
-    fread(&fInfo, sizeof(INFO_HEADER), 1, src);
+    // fseek(src, 0, SEEK_SET);
+    // fread(&fHeader, sizeof(BITMAP_HEADER), 1, src);
+    // fread(&fInfo, sizeof(INFO_HEADER), 1, src);
+    ReadFile(&src, &fHeader, &fInfo);
 
     DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;  //width must be an even value
     DWORD height = fInfo.Height;
-    DWORD padding = (4 - (width * sizeof(GRAY_VALUE)) % 4) % 4;
+    DWORD padding = (4 - (width * sizeof(GRAY_VALUE)) % 4) % 4;             //calculate row paddings
     DWORD new_width = width/8;
     // printf("Height: %d\n", height);
     // printf("Width: %d\n", width);
     // printf("New Width: %d\n", new_width);
 
     //check for valid information
-    FileCheck(fHeader, fInfo);
+    if (fHeader.Signature != 0x4D42 || fInfo.BitsPerPixel != 8) 
+    {
+        printf("\nInvalid file. Please enter a different file.");
+        goto OPEN_FILE;
+    }
     
     //read pixel data
     fseek(src, fHeader.fOffset, SEEK_SET);
@@ -69,25 +76,18 @@ int main()
     //Convert grey levels to binary
     BinaryConvert(height, width, new_width, image, image_new);
 
+    //Add color table for binary BMP file
     BYTE colorTable[8] = {0, 0, 0, 0, 255, 255, 255, 0};
     //BYTE colorTable[8] = {255,255,255,0,0,0,0,0};          //Endianness of BMP files is Little-Endian,
                                                              //thus the inverse arrangement
     //Modify header information
-    fHeader.Signature = 0x4D42;
-    fHeader.fOffset = 62;
-    fHeader.fSize = new_width * fInfo.Height + 62;
-    fInfo.BitsPerPixel = 1;
-    fInfo.imgSize = new_width * fInfo.Height;
-    fInfo.Color = 2;
-
+    NewHeader(&fHeader, &fInfo, new_width);
+    
     //Write file header
     fseek(dst, 0, SEEK_SET);
-    // printf("dst after seek: %lu", ftell(dst));
     fwrite(&fHeader, sizeof(BITMAP_HEADER), 1, dst);
     fwrite(&fInfo, sizeof(INFO_HEADER), 1, dst);
-    // printf("\ncp after reading bHeader: %lu\n", ftell(dst));
     fwrite(colorTable, sizeof(BYTE), 8, dst);
-    // printf("dst after writing color palette: %lu\n", ftell(dst));
 
     //write pixel data to output
     fseek(dst, fHeader.fOffset, SEEK_SET);
@@ -104,6 +104,24 @@ int main()
     //Complete and close all files
     fclose(dst);
     fclose(src);
-    printf("Process complete. Press any key to exit.");
-    getch();   
+    free(image);
+    free(image_new);
+    int input;
+    printf("Process complete.\n");
+END_PROGRAM:
+    printf("Press 1 to exit, or 0 to restart the program.");
+    scanf("%d", &input);
+    getchar();      //consume newline for next input
+    switch(input)
+    {
+        case 1:
+            break;
+        case 0:
+            goto OPEN_FILE;
+            break;
+        default:
+            printf("Invalid input.\n");
+            goto END_PROGRAM;
+            break;
+    }
 }
