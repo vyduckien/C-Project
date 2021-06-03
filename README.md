@@ -15,4 +15,5 @@ https://en.wikipedia.org/wiki/BMP_file_format
 http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm
 
 *__Example of how this program works:*__\
-Original: ![alt text](https://imgur.com/a/zUkpoGs "Original")
+Original: 
+![alt text](https://imgur.com/a/zUkpoGs "Original")
