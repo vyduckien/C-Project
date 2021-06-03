@@ -38,6 +38,4 @@ typedef struct
     BYTE Val;
 } GRAY_VALUE;
 
-void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[height][width], GRAY_VALUE image_new[height][new_width]);
-
 #endif

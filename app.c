@@ -13,19 +13,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <math.h>
+#include <conio.h>
 #include "bmp.h"
+#include "functions.h"
 
 int main()
-{
-    FILE *src, *dst;
-    src = fopen("Resources/lena.bmp", "rb");         //bmp is binary file, therefore use "rb" permission
+{   FILE *src, *dst;
+    char name[100];
+    printf("Enter image directory: ");
+    fgets(name, 100, stdin);
+    name[strcspn(name, "\n")] = 0;       // remove newline from string
+    
+    src = fopen(name, "rb");            //bmp is binary file, therefore use "rb" permission
     dst = fopen("Resources/output.bmp", "wb");
+
+    //check for valid file location
+    while (src == NULL)
+        {
+            printf("\nFile not found.");
+            return 1;
+        }
 
     BITMAP_HEADER fHeader;
     INFO_HEADER   fInfo;
-
-    //read file headers
+        
+    //read header information
     fseek(src, 0, SEEK_SET);
     fread(&fHeader, sizeof(BITMAP_HEADER), 1, src);
     fread(&fInfo, sizeof(INFO_HEADER), 1, src);
@@ -38,6 +52,9 @@ int main()
     // printf("Width: %d\n", width);
     // printf("New Width: %d\n", new_width);
 
+    //check for valid information
+    FileCheck(fHeader, fInfo);
+    
     //read pixel data
     fseek(src, fHeader.fOffset, SEEK_SET);
     GRAY_VALUE (*image)[width] = (GRAY_VALUE *)malloc(height * sizeof(*image));
@@ -49,7 +66,7 @@ int main()
         fseek(src, padding,  SEEK_CUR);                     //skip over padding
     }
 
-    //Convert to binary
+    //Convert grey levels to binary
     BinaryConvert(height, width, new_width, image, image_new);
 
     BYTE colorTable[8] = {0, 0, 0, 0, 255, 255, 255, 0};
@@ -86,5 +103,7 @@ int main()
 
     //Complete and close all files
     fclose(dst);
-    fclose(src);   
+    fclose(src);
+    printf("Process complete. Press any key to exit.");
+    getch();   
 }

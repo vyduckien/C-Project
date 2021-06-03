@@ -7,8 +7,8 @@ CCFLAGS= -g -std=c99 -Wall -pedantic
 %.o: %.c
 	$(CC) -c $(CCFLAGS) $<
 
-app: app.o binary.o 
-	$(CC) -o app app.o binary.o 
+app: app.o functions.o 
+	$(CC) -o app app.o functions.o 
 
 # test: test.o
 # 	gcc test.o -o  test
