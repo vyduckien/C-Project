@@ -4,17 +4,14 @@
 #include "bmp.h"
 #include "functions.h"
 
-void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[height][width], GRAY_VALUE image_new[height][new_width])
+void BinaryConvert(DWORD height, DWORD width, DWORD new_width, BYTE img[height][width], BYTE image_new[height][new_width])
 {
     //convert grey levels to black and white color
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            if (img[i][j].Val <= 127 && img[i][j].Val >= 0)
-                img[i][j].Val = 0;
-            else if (img[i][j].Val <= 255 && img[i][j].Val >= 128)
-                img[i][j].Val = 0x1;
+            img[i][j] = (img[i][j] < 128) ? 0x00 : 0x01;
         }
     }
     
@@ -29,7 +26,7 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, GRAY_VALUE img[he
         {
             for (k = count; k < count + 8; k++)
             {   
-                image_new[i][j].Val += img[i][k].Val << (shift - k);
+                image_new[i][j] += img[i][k] << (shift - k);
                 count = k;
                 if (count % width == shift)
                 {
@@ -77,14 +74,14 @@ void WriteFile(FILE **dst, BITMAP_HEADER fHeader, INFO_HEADER fInfo, BYTE colorT
     fwrite(colorTable, sizeof(BYTE), 8, *dst);
 }
 
-void Dither(DWORD height, DWORD width, GRAY_VALUE img[height][width], GRAY_VALUE img_dithered[height][width])
+void Dither(DWORD height, DWORD width, BYTE img[height][width], BYTE img_dithered[height][width])
 {
     int error;
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            img_dithered[i][j].Val = img[i][j].Val;
+            img_dithered[i][j] = img[i][j];
         }
     }
 
@@ -92,47 +89,43 @@ void Dither(DWORD height, DWORD width, GRAY_VALUE img[height][width], GRAY_VALUE
     {
         for (int j = 0; j < width; j++)
         {
-            BYTE old = img_dithered[i][j].Val;
-            img_dithered[i][j].Val = (img_dithered[i][j].Val < 128) ? 0 : 255;
-            error = old - img_dithered[i][j].Val;
+            BYTE old = img_dithered[i][j];
+            // printf("old: %d\n", old);
+            img_dithered[i][j] = (img_dithered[i][j] < 128) ? 0 : 255;
+            BYTE gay = img_dithered[i][j];
+            // printf("gay: %d\n", gay);
+            error = old - img_dithered[i][j];
+            // printf("error: %d\n", error);
             if (i + 1 < height)
             {
-                if (j - 1 > 0)
+                if (j + 1 < width) 
                 {
-                    img_dithered[i + 1][j - 1].Val = img_dithered[i + 1][j - 1].Val + round((float)(error * 3)/ 16);
+                    img_dithered[i + 1][j + 1] = img_dithered[i + 1][j + 1] + (int)roundf((float)(error * 1)/16);
+                    img_dithered[i    ][j + 1] = img_dithered[i    ][j + 1] + (int)roundf((float)(error * 7)/16); 
                 }
-                
-                img_dithered[i + 1][j    ].Val = img_dithered[i + 1][j    ].Val + round((float)(error * 5)/ 16);
-                if (j + 1 < width)
+                if(j - 1 >= 0)
                 {
-                    img_dithered[i + 1][j + 1].Val = img_dithered[i + 1][j + 1].Val + round((float)(error * 1)/ 16);
-                    img_dithered[i    ][j + 1].Val = img_dithered[i    ][j + 1].Val + round((float)(error * 7)/ 16);
+                    img_dithered[i + 1][j - 1] = img_dithered[i + 1][j - 1] + (int)roundf((float)(error * 3)/16); 
                 }
-                
+                    img_dithered[i + 1][j    ] = img_dithered[i + 1][j    ] + (int)roundf((float)(error * 5)/16); 
             }
+            if (i + 1 == height && j + 1 < width)
+            {
+                    img_dithered[i    ][j + 1] = img_dithered[i    ][j + 1] + (int)roundf((float)(error * 7)/16);
+            }
+            
                 
-                
+                         
                 
                 
         }
             
     }
 
-    
-
-    // for (int i = 0; i < width; i++)
-    // {
-    //    printf("%d ",  img[0][i].Val);
-    // }
-    // printf("\nAfter dithering:\n");
-    // for (int i = 0; i < width; i++)
-    // {
-    //    printf("%d ",  img_dithered[0][i].Val);
-    // }
     int count = 0;
     for (int i = 0; i < width; i++)
     {
-       printf("%X ",  img[0][i].Val);
+       printf("%X ",  img[0][i]);
        count ++;
     }
     printf("\nNumber of elements: %d\n", count);
@@ -141,7 +134,7 @@ void Dither(DWORD height, DWORD width, GRAY_VALUE img[height][width], GRAY_VALUE
     printf("After dithering:\n");
     for (int i = 0; i < width; i++)
     {
-       printf("%X ",  img_dithered[1][i].Val);
+       printf("%X ",  img_dithered[0][i]);
        count++;
     }
     printf("\nNumber of elements: %d\n", count);

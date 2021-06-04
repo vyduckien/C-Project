@@ -33,9 +33,4 @@ typedef struct
     DWORD ImpColor;
 } INFO_HEADER;
 
-typedef struct
-{
-    BYTE Val;
-} GRAY_VALUE;
-
 #endif
