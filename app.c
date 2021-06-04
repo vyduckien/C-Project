@@ -45,7 +45,7 @@ OPEN_FILE:
     // fseek(src, 0, SEEK_SET);
     // fread(&fHeader, sizeof(BITMAP_HEADER), 1, src);
     // fread(&fInfo, sizeof(INFO_HEADER), 1, src);
-    ReadFile(&src, &fHeader, &fInfo);
+    ReadFile(src, &fHeader, &fInfo);
 
     DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;  //width must be an even value
     DWORD height = fInfo.Height;
@@ -64,9 +64,9 @@ OPEN_FILE:
     
     //read pixel data
     fseek(src, fHeader.fOffset, SEEK_SET);
-    GRAY_VALUE (*image)[width] = (GRAY_VALUE *)malloc(height * sizeof(*image));
-    GRAY_VALUE (*image_new)[new_width] = (GRAY_VALUE *)calloc(height, sizeof(*image));    //allocate memory and initialize all with 0
-
+    GRAY_VALUE (*image)[width] = /* (GRAY_VALUE *) */malloc(height * sizeof(*image));
+    GRAY_VALUE (*image_new)[new_width] = /* (GRAY_VALUE *) */calloc(height, sizeof(*image));    //allocate memory and initialize all with 0
+    GRAY_VALUE (*image_dithered)[width] = calloc(height, sizeof(*image));
     for (int i = 0; i < height; i++)
     {
         fread(image[i], sizeof(GRAY_VALUE), width, src);
@@ -74,20 +74,18 @@ OPEN_FILE:
     }
 
     //Convert grey levels to binary
-    BinaryConvert(height, width, new_width, image, image_new);
+    Dither(height, width, image, image_dithered);
+    BinaryConvert(height, width, new_width, image_dithered, image_new);
 
     //Add color table for binary BMP file
-    BYTE colorTable[8] = {0, 0, 0, 0, 255, 255, 255, 0};
-    //BYTE colorTable[8] = {255,255,255,0,0,0,0,0};          //Endianness of BMP files is Little-Endian,
-                                                             //thus the inverse arrangement
+    BYTE colorTable[8] = {0, 0, 0, 0, 255, 255, 255, 0};        //blue, green, red value. 1 will be white, 0 will be black
+    //BYTE colorTable[8] = {255, 255, 255, 0, 0, 0, 0, 0};      //1 will be white, 0 will be black      
+
     //Modify header information
     NewHeader(&fHeader, &fInfo, new_width);
     
     //Write file header
-    fseek(dst, 0, SEEK_SET);
-    fwrite(&fHeader, sizeof(BITMAP_HEADER), 1, dst);
-    fwrite(&fInfo, sizeof(INFO_HEADER), 1, dst);
-    fwrite(colorTable, sizeof(BYTE), 8, dst);
+    WriteFile(&dst, fHeader, fInfo, colorTable);
 
     //write pixel data to output
     fseek(dst, fHeader.fOffset, SEEK_SET);
@@ -100,7 +98,13 @@ OPEN_FILE:
             fputc(0x00, dst);
         }
     }
-
+    int count = 0;
+    for (int i = 0; i < width; i++)
+    {
+       printf("%d ",  image_dithered[0][i].Val);
+       count++;
+    }
+    printf("\nNumber of elements: %d\n", count);
     //Complete and close all files
     fclose(dst);
     fclose(src);
