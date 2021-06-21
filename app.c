@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <dirent.h>
 #include "bmp.h"
 #include "functions.h"
 
@@ -45,12 +46,21 @@ OPEN_FILE:
     // Read file header
     ReadFile(src, &fHeader, &fInfo);
 
+    //check for valid information
+    if (fHeader.Signature != 0x4D42 || fInfo.BitsPerPixel != 8) 
+    {
+        printf("\nInvalid file. Expected BMP format.\nPlease choose a different file.");
+        fclose(src);
+        goto OPEN_FILE;
+    }
+
     char *base = basename(name);
     printf("\nImage information: \n");
     printf("\tName: %s\n", base);
     printf("\tSize: %0.1f KiB\n", (float)fHeader.Size/1024);
     printf("\tWidth: %d px\n", fInfo.Width);
     printf("\tHeight: %d px\n", fInfo.Height);
+    printf("\tColor depth (in bits): %d\n", fInfo.BitsPerPixel);
 
     //open file for writing the result
     printf("\nChoose where the result will be saved (Ex: C:/Program Files/output.bmp): ");
@@ -61,15 +71,7 @@ OPEN_FILE:
     DWORD width = (fInfo.Width % 2 == 1)? (fInfo.Width + 1) : fInfo.Width;  //width must be an even value
     DWORD height = fInfo.Height;
     DWORD padding = (4 - (width * sizeof(BYTE)) % 4) % 4;                   //calculate row paddings
-    
     DWORD new_width = width/8;
-
-    //check for valid information
-    if (fHeader.Signature != 0x4D42 || fInfo.BitsPerPixel != 8) 
-    {
-        printf("\nInvalid file. Expected BMP format.\nPlease choose a different file.");
-        goto OPEN_FILE;
-    }
     
     //read pixel data
     fseek(src, fHeader.Offset, SEEK_SET);
@@ -109,7 +111,7 @@ OPEN_FILE:
             //     count++;
             // }
             //     printf("\nNew number of elements: %d\n", count);
-            // break;
+            break;
     }
 
     //Add color table for binary BMP file
@@ -132,14 +134,15 @@ OPEN_FILE:
     free(image);
     free(image_new);
     base = basename(save);
-    printf("Processing...");
+    printf("\nProcessing...");
     printf("\nProcess complete.\n");
     printf("\nResult information: \n");
     printf("\tName: %s\n", base);
     printf("\tSize: %.1f KiB\n", (float)fHeader.Size/1024);
-    printf("\tHeight: %d px\n", fInfo.Height);
     printf("\tWidth: %d px\n", width);
-    printf("Open output.bmp to see the result.\n");
+    printf("\tHeight: %d px\n", fInfo.Height);
+    printf("\tColor depth (in bits): %d\n", fInfo.BitsPerPixel);
+    printf("Go to output.bmp to see the result.\n");
 
 END_PROGRAM:
     printf("\nPress 1 to exit, or 0 to restart the program.");
