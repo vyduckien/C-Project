@@ -8,6 +8,8 @@ The resultant image contain the new header file corresponding to the dimension a
 
 Due to the fact that in 1-bit color BMP file there is only one 1 bit for a pixel instead of 8 bits in the case of an 8-bit BMP file, the file size should theoretically be reduced by **1/8**.
 
+In order for the program to work, the original image file MUST have a color depth of 8 bits, and should contain an approriate color table.
+
 __*Reference resources:*__\
 BMP file format:\
 https://en.wikipedia.org/wiki/BMP_file_format
