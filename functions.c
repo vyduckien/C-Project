@@ -15,12 +15,19 @@ void WelcomeMsg()
     " |/\\| |___ |___ \\__, \\__/  |  | |___     |  \\__/     |  |  | |___    \\__,    |    |  \\ \\__/ \\__/ |___ \\__,  |\n\n");
     printf("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n");
     printf("\n\nPress Ctrl + C to exit the program at any point.");
+    ASK_INPUT:
     printf("\n\nPress 0 to begin the program.");
     printf("\n      1 to exit the program.");
-    printf("\n      2 for detailed instructions. (Recommended)");
+    printf("\n      2 for detailed instructions. (Recommended)");    
     printf("\nYour option? (0 - 2) ");
     int input;
     scanf("%d", &input);
+    while ((int)input < 0 || (int)input > 2)
+    {
+        printf("Try again.");
+        getchar();
+        goto ASK_INPUT;
+    }
     getchar();
     while(1)
     {
@@ -31,6 +38,7 @@ void WelcomeMsg()
                 break;
             case 1:
                 printf("\nExiting the program...");
+                delay(1);
                 exit(EXIT_FAILURE);
                 break;
             case 2:
@@ -44,13 +52,11 @@ void WelcomeMsg()
                         "\n\t\tEx: abcd.bmp");
                 printf("\n\t3. Select Dithering mode (with or without Dithering).");
                 printf("\n\t4. Wait until the process is complete and see the result at the given location.");
-                printf("\n\n\tPress 0 to begin the program, or 1 to exit. ");
-                printf("\n\tYour option? (0 - 1) ");
-                scanf("%d", &input);
+                goto ASK_INPUT;
                 getchar();
                 break; 
             default:
-                input = 1;
+                goto ASK_INPUT;
                 break;
         }
     }

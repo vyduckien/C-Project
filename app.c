@@ -27,6 +27,7 @@ int main()
     int input;
     char name[100];
     char save[100];
+WELCOME:
     WelcomeMsg();
 
 OPEN_FILE:
@@ -139,16 +140,26 @@ OPEN_FILE:
 
 END_PROGRAM:
     delay(1);
-    printf("\nPress 1 to exit, or 0 to restart the program.");
+    printf("\nPress 0 to restart the program, or 1 to exit.");
     printf("\nYour option? (0 - 1) ");
     scanf("%d", &input);
+    while ((int)input < 0 || (int)input > 1)
+    {
+        printf("Try again.");
+        getchar();
+        goto END_PROGRAM;
+    }
     getchar();      //consume newline for future input
     switch(input)
     {
         case 1:
+            printf("\nExiting the program...");
+            delay(1);
+            exit(EXIT_FAILURE);
             break;
         case 0:
-            goto OPEN_FILE;
+            system("cls");
+            goto WELCOME;
             break;
         default:
             printf("Invalid input.\n");
