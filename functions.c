@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 #include "bmp.h"
 #include "functions.h"
-
-
 
 void WelcomeMsg()
 {   
@@ -37,9 +36,9 @@ void WelcomeMsg()
             case 2:
                 printf("\n HOW TO USE THE PROGRAM:");
                 printf("\n\t1. Enter the path to the image. Note: image must be a .BMP file.\n"
-                        "\t\tEx: C:/Program Files/input.bmp"
+                        "\t\tEx: C:\\Program Files\\input.bmp"
                         "\n\t2. Enter the location where the result will be saved."
-                        "\n\t\tEx: C:/Program Files/output.bmp"
+                        "\n\t\tEx: C:\\Program Files\\output.bmp"
                         "\n\tNote: If the program's executable file and the image file are in the same folder,"
                         "\n\tjust enter the name of the image file and proceed."
                         "\n\t\tEx: abcd.bmp");
@@ -193,12 +192,28 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, BYTE img[height][
     }
 }
 
-char *basename(char const *path)
+char* getFileNameFromPath(char* path)
 {
-        char *s = strrchr(path, '/');
-        if(s==NULL) {
-                return strdup(path);
-        } else {
-                return strdup(s + 1);
-        }
+    if( path == NULL )
+        return NULL;
+
+    char *pFileName = path;
+    for( char * pCur = path; *pCur != '\0'; pCur++)
+    {
+        if( *pCur == '/' || *pCur == '\\' )
+            pFileName = pCur + 1;
+    }
+    return pFileName;
+}
+
+void delay(int number_of_seconds)
+{
+    // Converting time into milli_seconds
+    int milli_seconds = 1000 * number_of_seconds;
+  
+    // Storing start time
+    clock_t start_time = clock();
+  
+    // looping till required time is not achieved
+    while (clock() < start_time + milli_seconds);
 }

@@ -1,14 +1,11 @@
 #ifndef ___FUNCTIONS____
 #define ___FUNCTIONS____
 
-#include <stdio.h>
 #include "bmp.h"
 
 void WelcomeMsg();
 
 void DitherOpt();
-
-char *basename(char const *path);
 
 void ReadFile(FILE* src, BITMAP_HEADER *fHeader, INFO_HEADER *fInfo);
 
@@ -21,5 +18,9 @@ void Dither(DWORD height, DWORD width, BYTE img[height][width], BYTE img_dithere
 void WriteData(DWORD height, DWORD new_width, FILE* dst, BYTE img_new[][new_width], DWORD padding);
 
 void BinaryConvert(DWORD height, DWORD width, DWORD new_width, BYTE img[height][width], BYTE image_new[height][new_width]);
+
+char* getFileNameFromPath(char* path);
+
+void delay(int number_of_seconds);
 
 #endif

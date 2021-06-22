@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <dirent.h>
 #include "bmp.h"
 #include "functions.h"
 
@@ -31,7 +30,7 @@ int main()
 
 OPEN_FILE:
     //get file directory and save location from user
-    printf("\nEnter path to image (C:/Program Files/input.bmp): ");
+    printf("\nEnter path to image (C:\\Program Files\\input.bmp): ");
     fgets(name, 100, stdin);
     name[strcspn(name, "\n")] = 0;          //remove newline from string
     src = fopen(name, "rb");                //bmp is a binary file, therefore use "rb" permission
@@ -47,14 +46,20 @@ OPEN_FILE:
     ReadFile(src, &fHeader, &fInfo);
 
     //check for valid information
-    if (fHeader.Signature != 0x4D42 || fInfo.BitsPerPixel != 8) 
+    if (fHeader.Signature != 0x4D42) 
     {
         printf("\nInvalid file. Expected BMP format.\nPlease choose a different file.");
         fclose(src);
         goto OPEN_FILE;
     }
+    if(fInfo.BitsPerPixel != 8)
+    {
+        printf("\nInvalid color depth (%d-bit). Expected 8-bit color depth.\nPlease choose a different file.", fInfo.BitsPerPixel);
+        fclose(src);
+        goto OPEN_FILE;
+    }
 
-    char *base = basename(name);
+    char *base = getFileNameFromPath(name);
     printf("\nImage information: \n");
     printf("\tName: %s\n", base);
     printf("\tSize: %0.1f KiB\n", (float)fHeader.Size/1024);
@@ -63,7 +68,7 @@ OPEN_FILE:
     printf("\tColor depth (in bits): %d\n", fInfo.BitsPerPixel);
 
     //open file for writing the result
-    printf("\nChoose where the result will be saved (Ex: C:/Program Files/output.bmp): ");
+    printf("\nChoose where the result will be saved (Ex: C:\\Program Files\\output.bmp): ");
     fgets(save, 100, stdin);
     save[strcspn(save, "\n")] = 0;          //remove newline from string
     dst = fopen(save, "wb");    
@@ -83,14 +88,6 @@ OPEN_FILE:
         fread(image[i], sizeof(BYTE), width, src);
         fseek(src, padding,  SEEK_CUR);                     //skip over padding
     }
-    // int count = 0;
-    // for (int i = 0; i < width; i++)
-    // {
-    //    printf("%d ", image[234][i]);
-    //    count++;
-    //    if (count % 8 == 0) printf("\n");
-    // }
-    // printf("\nNumber of elements: %d\n", count);
     
     //Convert grey levels to binary
     DitherOpt();                            //Let user choose between dithering or non-dithering
@@ -104,13 +101,6 @@ OPEN_FILE:
             break;
         case 0:
             BinaryConvert(height, width, new_width, image, image_new);
-            // count = 0;
-            // for (int i = 0; i < new_width; i++)
-            // {
-            //     printf("%d. %X\n", count, image_new[234][i]);
-            //     count++;
-            // }
-            //     printf("\nNew number of elements: %d\n", count);
             break;
     }
 
@@ -133,18 +123,21 @@ OPEN_FILE:
     fclose(src);
     free(image);
     free(image_new);
-    base = basename(save);
+    base = getFileNameFromPath(save);
     printf("\nProcessing...");
+    delay(1);
     printf("\nProcess complete.\n");
+    delay(1);
     printf("\nResult information: \n");
     printf("\tName: %s\n", base);
     printf("\tSize: %.1f KiB\n", (float)fHeader.Size/1024);
     printf("\tWidth: %d px\n", width);
     printf("\tHeight: %d px\n", fInfo.Height);
     printf("\tColor depth (in bits): %d\n", fInfo.BitsPerPixel);
-    printf("Go to output.bmp to see the result.\n");
+    printf("Go to %s to see the result.\n", save);
 
 END_PROGRAM:
+    delay(1);
     printf("\nPress 1 to exit, or 0 to restart the program.");
     printf("\nYour option? (0 - 1) ");
     scanf("%d", &input);
@@ -162,3 +155,4 @@ END_PROGRAM:
             break;
     }
 }
+
