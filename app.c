@@ -7,6 +7,7 @@
  * 
  * Author: Vy Duc Kien
  * ID: 1951010
+ * Email: kien.vy.245@hcmut.edu.vn
  * Date: 24/05/2021
  */
 
@@ -155,4 +156,3 @@ END_PROGRAM:
             break;
     }
 }
-
