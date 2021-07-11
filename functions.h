@@ -5,8 +5,6 @@
 
 void WelcomeMsg();
 
-void DitherOpt();
-
 void ReadFile(FILE* src, BITMAP_HEADER *fHeader, INFO_HEADER *fInfo);
 
 void NewHeader(BITMAP_HEADER *fHeader, INFO_HEADER *fInfo, DWORD new_width);
@@ -21,6 +19,6 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, BYTE img[height][
 
 char* getFileNameFromPath(char* path);
 
-void delay(int number_of_seconds);
+void delay(int milli_secs);
 
 #endif

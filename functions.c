@@ -10,9 +10,9 @@ void WelcomeMsg()
 {   
     printf("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n");
     printf(
-    "       ___       __   __         ___    ___  __     ___       ___     __      __   __   __        ___  __  ___\n" 
+      "       ___       __   __         ___    ___  __     ___       ___     __      __   __   __        ___  __  ___\n" 
     " |  | |__  |    /  ` /  \\  |\\/| |__      |  /  \\     |  |__| |__     /  `    |__) |__) /  \\    | |__  /  `  |\n"
-    " |/\\| |___ |___ \\__, \\__/  |  | |___     |  \\__/     |  |  | |___    \\__,    |    |  \\ \\__/ \\__/ |___ \\__,  |\n\n");
+   " |/\\| |___ |___ \\__, \\__/  |  | |___     |  \\__/     |  |  | |___    \\__,    |    |  \\ \\__/ \\__/ |___ \\__,  |\n\n");
     printf("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n");
     printf("\n\nPress Ctrl + C to exit the program at any point.");
     ASK_INPUT:
@@ -22,9 +22,10 @@ void WelcomeMsg()
     printf("\nYour option? (0 - 2) ");
     int input;
     scanf("%d", &input);
-    while ((int)input < 0 || (int)input > 2)
+    if ((int)input < 0 || (int)input > 2)
     {
         printf("Try again.");
+        delay(500);
         getchar();
         goto ASK_INPUT;
     }
@@ -38,7 +39,7 @@ void WelcomeMsg()
                 break;
             case 1:
                 printf("\nExiting the program...");
-                delay(1);
+                delay(1000);
                 exit(EXIT_FAILURE);
                 break;
             case 2:
@@ -60,14 +61,6 @@ void WelcomeMsg()
                 break;
         }
     }
-}
-
-void DitherOpt()
-{
-    printf("\nChoose an option:\n");
-    printf("\t1 - With dithering\n");
-    printf("\t0 - No dithering\n");
-    printf("Your option? (0 - 1): ");
 }
 
 void ReadFile(FILE* src, BITMAP_HEADER *fInfo, INFO_HEADER *fHeader)
@@ -133,22 +126,6 @@ void Dither(DWORD height, DWORD width, BYTE img[height][width], BYTE img_dithere
         }
             
     }
-    // int count = 0;
-    // for (int i = 0; i < width; i++)
-    // {
-    //    printf("%X ",  img[0][i]);
-    //    count ++;
-    // }
-    // printf("\nNumber of elements: %d\n", count);
-
-    // count = 0;
-    // printf("After dithering:\n");
-    // for (int i = 0; i < width; i++)
-    // {
-    //    printf("%X ",  img_dithered[0][i]);
-    //    count++;
-    // }
-    // printf("\nNumber of elements: %d\n", count);
 }
 
 void WriteData(DWORD height, DWORD new_width, FILE* dst, BYTE img_new[][new_width], DWORD padding)
@@ -158,7 +135,7 @@ void WriteData(DWORD height, DWORD new_width, FILE* dst, BYTE img_new[][new_widt
         fwrite(img_new[i], sizeof(BYTE), new_width, dst);
         for (int k = 0; k < padding; k++)
         {
-            fputc(0x00, dst);
+            fputc(0x00, dst);                       //insert padding
         }
     }
 }
@@ -174,7 +151,7 @@ void BinaryConvert(DWORD height, DWORD width, DWORD new_width, BYTE img[height][
         }
     }
     
-    //squeeze 8 bytes of 0 and 1 into one byte using bit shifting
+    //squeeze 8 bytes of 0 and 1 from the original image into one byte using bit shifting
     for (int i = 0; i < height; i++)
     {
         int k = 0;
@@ -212,14 +189,11 @@ char* getFileNameFromPath(char* path)
     return pFileName;
 }
 
-void delay(int number_of_seconds)
-{
-    // Converting time into milli_seconds
-    int milli_seconds = 1000 * number_of_seconds;
-  
+void delay(int milli_secs)
+{ 
     // Storing start time
     clock_t start_time = clock();
   
     // looping till required time is not achieved
-    while (clock() < start_time + milli_seconds);
+    while (clock() < start_time + milli_secs);
 }
