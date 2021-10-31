@@ -21,5 +21,5 @@ Original (257 KB):\
 ![Origin](https://i.imgur.com/BQNXv8T.png)\
 Result (32 KB, without dithering):
 ![Result](https://i.imgur.com/CNEQaTm.png)
-Result (32 
+Result (32 )\
 ![Result](https://imgur.com/a/TLbpwBN)
