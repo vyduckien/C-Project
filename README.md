@@ -19,7 +19,7 @@ http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_f
 __*Example of how this program works:*__\
 Original (257 KB):\
 ![Origin](https://i.imgur.com/BQNXv8T.png)\
-Result (32 KB, without dithering):|
-![Result](https://i.imgur.com/CNEQaTm.png)
+Result (32 KB, without dithering):\
+![Result](https://i.imgur.com/CNEQaTm.png)\
 Result (32 KB, with dithering):\
 ![Result](https://i.imgur.com/JAzpuxu.png)
