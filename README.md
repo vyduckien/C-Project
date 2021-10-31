@@ -12,17 +12,28 @@ In order for the program to work, the original image file MUST have a color dept
 
 The program let user choose between dithering and no-dithering mode.
 
-**Note**: Dithering mode is still not perfect due to some uknown miscalculation.\
-__*Reference:*__\
-BMP file format:\
+**Note**: Dithering mode is still not perfect due to some uknown miscalculation.
+
+__*Reference:*__
+
+BMP file format:
+
 https://en.wikipedia.org/wiki/BMP_file_format
-http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm \
+
+http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm 
+
 [BMP Suite Image List](http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html)
 
-__*Example of how this program works:*__\
-Original (257 KB):\
-![Origin](https://i.imgur.com/BQNXv8T.png)\
-Result (32 KB, without dithering):\
-![Result](https://i.imgur.com/CNEQaTm.png)\
-Result (32 KB, with dithering):\
+__*Example of how this program works:*__
+
+Original (257 KB):
+
+![Origin](https://i.imgur.com/BQNXv8T.png)
+
+Result (32 KB, without dithering):
+
+![Result](https://i.imgur.com/CNEQaTm.png)
+
+Result (32 KB, with dithering):
+
 ![Result](https://i.imgur.com/JAzpuxu.png)
