@@ -2,6 +2,8 @@
 
 This is a class project for the course ECE 220 (EE2415: Computer System and Programming Languages - HCMUT). Feel free to share and distribute the code.
 
+##Introduction
+
 This program converts an greyscale BMP file of 8-bit color depth to a binary bmp file.
 
 The color of the original image is not simply changed, but __*also the header information is also modified*__.
@@ -16,17 +18,7 @@ The program lets user choose between dithering and no-dithering mode.
 
 **Note**: Dithering mode is still not perfect due to some uknown miscalculation.
 
-__*Reference:*__
-
-BMP file format:
-
-https://en.wikipedia.org/wiki/BMP_file_format
-
-http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm 
-
-[BMP Suite Image List](http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html)
-
-__*Example of how this program works:*__
+## Demonstration
 
 Original (257 KB):
 
@@ -39,3 +31,13 @@ Result (32 KB, without dithering):
 Result (32 KB, with dithering):
 
 ![Result](https://i.imgur.com/JAzpuxu.png)
+
+## Reference 
+
+BMP file format:
+
+https://en.wikipedia.org/wiki/BMP_file_format
+
+http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm 
+
+[BMP Suite Image List](http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html)
