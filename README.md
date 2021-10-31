@@ -1,5 +1,7 @@
 # 8-bit greyscale to binary color
 
+This is a class project for the course ECE 220 (EE2415: Computer System and Programming Languages - HCMUT). Feel free to share and distribute the code.
+
 This program converts an greyscale BMP file of 8-bit color depth to a binary bmp file.
 
 The color of the original image is not simply changed, but __*also the header information is also modified*__.
