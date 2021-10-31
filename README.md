@@ -1,4 +1,4 @@
-# 8-bit greyscale to binary color
+# 8-bit Greyscale To Binary Color
 
 This is a class project for the course ECE 220 (EE2415: Computer System and Programming Languages - HCMUT). Feel free to share and distribute the code.
 
