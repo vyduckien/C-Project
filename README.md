@@ -12,7 +12,7 @@ In order for the program to work, the original image file MUST have a color dept
 
 The program let user choose between dithering and no-dithering mode.
 
-**Note**: Dithering mode is still not perfect due to some uknown miscalculation.
+**Note**: Dithering mode is still not perfect due to some uknown miscalculation.\
 __*Reference:*__\
 BMP file format:\
 https://en.wikipedia.org/wiki/BMP_file_format
