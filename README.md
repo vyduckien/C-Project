@@ -1,4 +1,4 @@
-# Welcome to the repository of the program
+# 8-bit greyscale to binary color
 
 This program converts an greyscale BMP file of 8-bit color depth to a binary bmp file.
 
