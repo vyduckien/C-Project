@@ -10,6 +10,9 @@ Due to the fact that in 1-bit color BMP file there is only one 1 bit for a pixel
 
 In order for the program to work, the original image file MUST have a color depth of 8 bits, and should contain an approriate color table.
 
+The program let user choose between dithering and no-dithering mode.
+
+**Note**: Dithering mode is still not perfect due to some uknown miscalculation.
 __*Reference:*__\
 BMP file format:\
 https://en.wikipedia.org/wiki/BMP_file_format
