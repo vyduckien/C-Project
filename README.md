@@ -10,7 +10,7 @@ Due to the fact that in 1-bit color BMP file there is only one 1 bit for a pixel
 
 In order for the program to work, the original image file MUST have a color depth of 8 bits, and should contain an approriate color table.
 
-__*Reference resources:*__\
+__*Reference:*__\
 BMP file format:\
 https://en.wikipedia.org/wiki/BMP_file_format
 http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm \
