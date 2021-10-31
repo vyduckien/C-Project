@@ -2,7 +2,7 @@
 
 This program converts an greyscale BMP file of 8-bit color depth to a binary bmp file.
 
-the color of the original image is not simply changed, but __*also the header information is also modified*__.
+The color of the original image is not simply changed, but __*also the header information is also modified*__.
 
 The resultant image contain the new header file corresponding to the dimension and its color depth, as well as reduced size due to compression.
 
@@ -19,5 +19,7 @@ http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_f
 __*Example of how this program works:*__\
 Original (257 KB):\
 ![Origin](https://i.imgur.com/BQNXv8T.png)\
-Result (32 KB, without dithering):\
+Result (32 KB, without dithering):
 ![Result](https://i.imgur.com/CNEQaTm.png)
+Result (32 
+![Result](https://imgur.com/a/TLbpwBN)
